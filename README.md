@@ -1,6 +1,6 @@
 ## Simple Go HTTP server
 
-Simple HTTP server that doesn't do anything else aside from showing in logs requests received.
+Simple HTTP server that doesn't do anything else aside from showing in logs requests received. It randomizes the HTTP server response.
 
 ### Example
 
@@ -44,4 +44,12 @@ Expected server logs:
 2023/05/09 12:36:02 Content-Type: application/json
 2023/05/09 12:36:02 Authorization: Bearer my-bearer-token
 2023/05/09 12:36:02 Request body: {"name": "Raúl Barroso", "email": "raul@meroxa.io"}
+```
+
+## Other options
+
+You could specify the name of a specific service in case you want to customize the response. e.g.:
+
+```shell
+make run SERVICE=discord # discord is yet to be implemented
 ```
