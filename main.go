@@ -1,8 +1,8 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
-	"fmt"
 	"io"
 	"log"
 	"math/rand"
@@ -51,6 +51,12 @@ func handler(w http.ResponseWriter, r *http.Request, s string) {
 		log.Printf("Request body: %s", string(body))
 	}
 
+	type Response struct {
+		Message string `json:"message"`
+	}
+
+	var resp Response
+
 	switch s {
 	case "random":
 		var response = []string{
@@ -65,8 +71,17 @@ func handler(w http.ResponseWriter, r *http.Request, s string) {
 			"Why don't ants get sick? Because they have little ant-bodies.",
 		}
 		r := rand.New(rand.NewSource(time.Now().UTC().UnixNano()))
-		fmt.Fprintln(w, response[r.Intn(len(response))])
+		resp.Message = response[r.Intn(len(response))]
 	default:
-		fmt.Fprintln(w, "👋")
+		resp.Message = "👋"
 	}
+
+	jsonResp, err := json.Marshal(resp)
+	if err != nil {
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(jsonResp)
 }
